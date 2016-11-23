@@ -5,3 +5,4 @@ gem 'rails-api'
 gem 'spring', :group => :development
 gem 'pg'
 gem 'bcrypt', '~> 3.1.7'
+gem 'omniauth-facebook'
