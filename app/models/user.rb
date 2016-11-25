@@ -1,8 +1,9 @@
 class User < ActiveRecord::Base
   has_secure_password
 
-  validates :email, presence: true
-  validates :email, uniqueness: true
+  validates :email, uniqueness: true, presence: true
+  validates :password, length: { minimum: 8 }
+  validates :password_confirmation, presence: true
 
   class << self
     def from_omniauth(auth_hash)

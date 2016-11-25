@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   def create
-    new_user = User.new(user_creation_params)
-    if new_user.save
+    new_user = User.create(user_creation_params)
+    if new_user.valid?
       session[:user_id] = new_user.id
       render json: new_user.to_json
     else
@@ -41,7 +41,7 @@ class UsersController < ApplicationController
   end
 
   def user_creation_params
-    params.require(:user).permit(:name, :email, :password)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
 
   def user_update_params
