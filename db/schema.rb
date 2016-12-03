@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 20161127001408) do
   enable_extension "uuid-ossp"
 
   create_table "images", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
-    t.integer  "height"
     t.integer  "width"
+    t.integer  "height"
     t.string   "format"
     t.string   "object_key"
     t.string   "url"
