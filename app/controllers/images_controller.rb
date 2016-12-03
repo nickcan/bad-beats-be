@@ -23,4 +23,9 @@ class ImagesController < ApplicationController
       render json: "error occured uploading image"
     end
   end
+
+  def show
+    image = Image.find(params[:id])
+    render json: image.to_json
+  end
 end
