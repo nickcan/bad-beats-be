@@ -1,4 +1,6 @@
 class Image < ActiveRecord::Base
+  belongs_to :imageable, polymorphic: true
+
   attr_reader :magick_image, :s3_obj
 
   def initialize_magick_image(file)
