@@ -2,8 +2,11 @@ class Comment < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
 
-  has_many :images, as: :imageable, dependent: :destroy
+  validates_presence_of :message, :post_id, :user_id
 
-  validates :post_id, presence: true
-  validates :user_id, presence: true
+  class << self
+    def get_latest_comments(size: 15, page: nil)
+      order(:created_at).limit(size).offset(page)
+    end
+  end
 end
