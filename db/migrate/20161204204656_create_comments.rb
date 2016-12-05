@@ -1,9 +1,9 @@
 class CreateComments < ActiveRecord::Migration
   def change
-    create_table :comments do |t|
-      t.belongs_to :post, index: true
-      t.belongs_to :user, index: true
-      t.string     :message
+    create_table :comments, id: :uuid, default: 'gen_random_uuid()' do |t|
+      t.uuid   :post_id, null: false
+      t.uuid   :user_id, null: false
+      t.string :message
 
       t.timestamps
     end

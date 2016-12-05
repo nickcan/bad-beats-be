@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
   has_secure_password
 
-  has_many :posts
-  has_many :comments
+  has_many :posts, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   validates :email, uniqueness: true, presence: true
   validates :password, length: { minimum: 8 }, allow_nil: true

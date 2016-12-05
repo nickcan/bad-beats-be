@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  resources :users
+  resources :users do
+    resources :posts, only: [:create, :update, :destroy]
+  end
+
+  resources :posts, only: [:index, :show]
+
   resources :sessions, only: :create
   resources :images, only: [:create, :show]
 

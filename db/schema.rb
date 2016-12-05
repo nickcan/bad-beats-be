@@ -15,21 +15,20 @@ ActiveRecord::Schema.define(version: 20161204204656) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "uuid-ossp"
+  enable_extension "pgcrypto"
 
-  create_table "comments", force: true do |t|
-    t.integer  "post_id"
-    t.integer  "user_id"
+  create_table "comments", id: false, force: true do |t|
+    t.uuid     "id",         default: "gen_random_uuid()", null: false
+    t.uuid     "post_id",                                  null: false
+    t.uuid     "user_id",                                  null: false
     t.string   "message"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "comments", ["post_id"], name: "index_comments_on_post_id", using: :btree
-  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
-
-  create_table "images", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
-    t.integer  "imageable_id"
+  create_table "images", id: false, force: true do |t|
+    t.uuid     "id",             default: "gen_random_uuid()", null: false
+    t.uuid     "imageable_id"
     t.string   "imageable_type"
     t.integer  "width"
     t.integer  "height"
@@ -40,18 +39,16 @@ ActiveRecord::Schema.define(version: 20161204204656) do
     t.datetime "updated_at"
   end
 
-  add_index "images", ["imageable_id", "imageable_type"], name: "index_images_on_imageable_id_and_imageable_type", using: :btree
-
-  create_table "posts", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
-    t.integer  "user_id"
+  create_table "posts", id: false, force: true do |t|
+    t.uuid     "id",         default: "gen_random_uuid()", null: false
+    t.uuid     "user_id",                                  null: false
     t.string   "text"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "posts", ["user_id"], name: "index_posts_on_user_id", using: :btree
-
-  create_table "users", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
+  create_table "users", id: false, force: true do |t|
+    t.uuid     "id",              default: "gen_random_uuid()", null: false
     t.string   "provider"
     t.string   "uid"
     t.string   "email"
