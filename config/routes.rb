@@ -1,9 +1,6 @@
 Rails.application.routes.draw do
-  resources :users do
-    resources :posts, only: [:create, :update, :destroy]
-  end
-
-  resources :posts, only: [:index, :show]
+  resources :users, except: [:edit, :new]
+  resources :posts, except: [:edit, :new, :update]
 
   resources :sessions, only: :create
   resources :images, only: [:create, :show]
