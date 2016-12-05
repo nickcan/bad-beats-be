@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20161204204656) do
     t.uuid     "id",         default: "gen_random_uuid()", null: false
     t.uuid     "user_id",                                  null: false
     t.string   "text"
+    t.string   "sport"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
