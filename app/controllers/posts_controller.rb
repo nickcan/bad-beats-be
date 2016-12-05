@@ -13,7 +13,7 @@ class PostsController < ApplicationController
   def destroy
     post = current_user.posts.find(params[:id])
     post.destroy!
-    render json: post.to_json, status: 204
+    render json: post.to_json
   end
 
   def index

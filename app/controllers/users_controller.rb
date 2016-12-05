@@ -10,8 +10,9 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    user.destroy
-    render nothing: true, status: :no_content
+    current_user.destroy!
+    session[:user_id] = nil
+    render json: current_user.to_json
   end
 
   def index

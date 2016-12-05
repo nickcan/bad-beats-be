@@ -11,7 +11,7 @@ class CommentsController < ApplicationController
   def destroy
     comment = current_user.comments.find(params[:id])
     comment.destroy!
-    render json: comment.to_json, status: 204
+    render json: comment.to_json
   end
 
   def index
