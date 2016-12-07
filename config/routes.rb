@@ -5,12 +5,16 @@ Rails.application.routes.draw do
 
   resources :posts, except: [:edit, :new, :update] do
     resources :comments, only: [:index]
+    get 'votes', to: 'votes#votes_per_post'
   end
 
-  resources :comments, only: [:destroy, :create, :update]
+  resources :comments, only: [:destroy, :create, :update] do
+    get 'votes', to: 'votes#votes_per_comment'
+  end
 
-  resources :sessions, only: :create
   resources :images, only: [:create, :show]
+  resources :sessions, only: :create
+  resources :votes, only: [:create, :destroy]
 
   get 'logout', to: 'sessions#destroy'
   get '/auth/:provider/callback', to: 'sessions#login_facebook'
