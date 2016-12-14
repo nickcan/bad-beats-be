@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161207044957) do
+ActiveRecord::Schema.define(version: 20161214090921) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,21 @@ ActiveRecord::Schema.define(version: 20161207044957) do
     t.uuid     "user_id",                                  null: false
     t.string   "text"
     t.string   "sport"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "taggings", id: false, force: true do |t|
+    t.uuid     "id",         default: "gen_random_uuid()", null: false
+    t.uuid     "post_id"
+    t.uuid     "tag_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "tags", id: false, force: true do |t|
+    t.uuid     "id",         default: "gen_random_uuid()", null: false
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

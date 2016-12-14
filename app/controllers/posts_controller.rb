@@ -1,11 +1,17 @@
 class PostsController < ApplicationController
   def create
     new_post = current_user.posts.new(text: params[:text])
+
     if params[:image]
       image = new_post.images.new.initialize_magick_image(params[:image][:file])
       image.upload_to_s3
     end
+
     new_post.save!
+
+    if params[:tags]
+      new_post.create_tags(params[:tags])
+    end
 
     render json: format_post(new_post).to_json
   end
@@ -39,7 +45,8 @@ class PostsController < ApplicationController
   def format_post(current_post)
     {
       post: current_post,
-      image: current_post.images.first
+      image: current_post.images.first,
+      tags: current_post.tags
     }
   end
 end
