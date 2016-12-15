@@ -12,10 +12,13 @@ Rails.application.routes.draw do
     get 'votes', to: 'votes#votes_per_comment'
   end
 
+
+  resources :tags, only: [:index]
   resources :images, only: [:create, :show]
   resources :sessions, only: :create
   resources :votes, only: [:create, :destroy]
 
+  get 'tags/:name/posts', to: 'tags#posts_by_tag'
   get 'logout', to: 'sessions#destroy'
   get '/auth/:provider/callback', to: 'sessions#login_facebook'
   get 'active_user', to: 'users#active_user'

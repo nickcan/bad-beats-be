@@ -6,11 +6,11 @@ class PostsController < ApplicationController
       new_post.create_image_and_upload_to_s3(params[:image][:file])
     end
 
+    new_post.save!
+
     if params[:tags]
       new_post.first_or_create_tags(params[:tags])
     end
-
-    new_post.save!
 
     render json: format_post(new_post).to_json
   end
