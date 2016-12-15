@@ -1,17 +1,16 @@
 class PostsController < ApplicationController
   def create
-    new_post = current_user.posts.new(text: params[:text])
+    new_post = current_user.posts.new(text: params[:text], sport: params[:sport])
 
     if params[:image]
-      image = new_post.images.new.initialize_magick_image(params[:image][:file])
-      image.upload_to_s3
+      new_post.create_image_and_upload_to_s3(params[:image][:file])
+    end
+
+    if params[:tags]
+      new_post.first_or_create_tags(params[:tags])
     end
 
     new_post.save!
-
-    if params[:tags]
-      new_post.create_tags(params[:tags])
-    end
 
     render json: format_post(new_post).to_json
   end

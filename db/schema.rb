@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20161214090921) do
     t.uuid     "id",         default: "gen_random_uuid()", null: false
     t.uuid     "post_id",                                  null: false
     t.uuid     "user_id",                                  null: false
-    t.string   "message"
+    t.string   "message",                                  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 20161214090921) do
     t.uuid     "id",         default: "gen_random_uuid()", null: false
     t.uuid     "user_id",                                  null: false
     t.string   "text"
-    t.string   "sport"
+    t.string   "sport",                                    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 20161214090921) do
 
   create_table "tags", id: false, force: true do |t|
     t.uuid     "id",         default: "gen_random_uuid()", null: false
-    t.string   "name"
+    t.string   "name",                                     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -67,17 +67,17 @@ ActiveRecord::Schema.define(version: 20161214090921) do
     t.uuid     "id",              default: "gen_random_uuid()", null: false
     t.string   "provider"
     t.string   "uid"
-    t.string   "email"
+    t.string   "email",                                         null: false
     t.string   "name"
     t.string   "image_url"
-    t.string   "password_digest"
+    t.string   "password_digest",                               null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "votes", id: false, force: true do |t|
     t.uuid     "id",           default: "gen_random_uuid()", null: false
-    t.uuid     "user_id"
+    t.uuid     "user_id",                                    null: false
     t.uuid     "votable_id"
     t.string   "votable_type"
     t.datetime "created_at"

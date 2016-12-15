@@ -7,6 +7,8 @@ class Post < ActiveRecord::Base
   has_many :tags, through: :taggings
 
   validates :user_id, presence: true
+  validates :text, length: { maximum: 500 }, allow_blank: true
+  validates :sport, presence: true
 
   class << self
     def get_latest_posts(size: 15, page: nil)
@@ -18,7 +20,12 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def create_tags(tagNames)
+  def create_image_and_upload_to_s3(file)
+    image = self.images.new.initialize_magick_image(file)
+    image.upload_to_s3
+  end
+
+  def first_or_create_tags(tagNames)
     tagNames.each do |tagName|
       tag = Tag.where(name: tagName).first_or_create name: tagName
       Tagging.create post_id: self.id, tag_id: tag.id
