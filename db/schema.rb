@@ -15,19 +15,17 @@ ActiveRecord::Schema.define(version: 20161207044957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "pgcrypto"
+  enable_extension "uuid-ossp"
 
-  create_table "comments", id: false, force: true do |t|
-    t.uuid     "id",         default: "gen_random_uuid()", null: false
-    t.uuid     "post_id",                                  null: false
-    t.uuid     "user_id",                                  null: false
+  create_table "comments", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
+    t.uuid     "post_id",    null: false
+    t.uuid     "user_id",    null: false
     t.string   "message"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "images", id: false, force: true do |t|
-    t.uuid     "id",             default: "gen_random_uuid()", null: false
+  create_table "images", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
     t.uuid     "imageable_id"
     t.string   "imageable_type"
     t.integer  "width"
@@ -39,17 +37,15 @@ ActiveRecord::Schema.define(version: 20161207044957) do
     t.datetime "updated_at"
   end
 
-  create_table "posts", id: false, force: true do |t|
-    t.uuid     "id",         default: "gen_random_uuid()", null: false
-    t.uuid     "user_id",                                  null: false
+  create_table "posts", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
+    t.uuid     "user_id",    null: false
     t.string   "text"
     t.string   "sport"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "users", id: false, force: true do |t|
-    t.uuid     "id",              default: "gen_random_uuid()", null: false
+  create_table "users", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
     t.string   "provider"
     t.string   "uid"
     t.string   "email"
@@ -60,8 +56,7 @@ ActiveRecord::Schema.define(version: 20161207044957) do
     t.datetime "updated_at"
   end
 
-  create_table "votes", id: false, force: true do |t|
-    t.uuid     "id",           default: "gen_random_uuid()", null: false
+  create_table "votes", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
     t.uuid     "user_id"
     t.uuid     "votable_id"
     t.string   "votable_type"

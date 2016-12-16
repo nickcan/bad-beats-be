@@ -1,6 +1,6 @@
 class CreateUsers < ActiveRecord::Migration
   def change
-    create_table :users, id: :uuid, default: 'gen_random_uuid()' do |t|
+    create_table :users, id: :uuid do |t|
       t.string :provider
       t.string :uid
       t.string :email
