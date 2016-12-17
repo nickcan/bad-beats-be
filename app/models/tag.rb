@@ -4,11 +4,13 @@ class Tag < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
 
-  def self.search(name)
-    if name.blank?
-      all.limit(25)
-    else
-      where('lower(name) LIKE ?', "%#{name.downcase}%").limit(25)
-    end
+  def self.search(name = "")
+    where("lower(name) LIKE ?", "%#{name.downcase}%").
+    joins(:posts).
+    group("tags.id").
+    select("tags.id, tags.name, count(*) as num_posts").
+    order("num_posts").
+    reverse_order.
+    limit(10)
   end
 end
