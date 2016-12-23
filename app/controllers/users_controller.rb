@@ -1,43 +1,45 @@
 class UsersController < ApplicationController
+  before_filter :authenticate_request!, only: [:active_user, :destroy, :update]
+
   def create
     new_user = User.create(user_creation_params)
     if new_user.valid?
-      session[:user_id] = new_user.id
-      render json: new_user.to_json
+      render json: new_user.format_with_jwt_payload
     else
-      render json: new_user.errors.to_json
+      render json: new_user.errors
     end
   end
 
   def destroy
     current_user.destroy!
     session[:user_id] = nil
-    render json: current_user.to_json
+    render json: current_user
   end
 
   def index
-    render json: User.all.to_json
+    formatted_users = User.all.map { |user| user.serialize }
+    render json: formatted_users
   end
 
   def update
     if current_user.update_attributes(user_update_params)
-      render json: current_user.to_json
+      render json: current_user
     else
-      render json: current_user.errors.to_json
+      render json: current_user.errors
     end
   end
 
   def show
-    render json: user.to_json
+    render json: found_user.serialize
   end
 
   def active_user
-    render json: current_user.to_json
+    render json: current_user.serialize
   end
 
   private
 
-  def user
+  def found_user
     @_user ||= User.find(params[:id])
   end
 
