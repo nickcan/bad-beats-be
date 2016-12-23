@@ -31,4 +31,12 @@ class Post < ActiveRecord::Base
       Tagging.create post_id: self.id, tag_id: tag.id
     end
   end
+
+  def serialize
+    {
+      post: self,
+      image: self.images.first,
+      tags: self.tags
+    }
+  end
 end

@@ -1,26 +1,28 @@
 class VotesController < ApplicationController
+  before_filter :authenticate_request!, only: [:create, :destroy]
+
   def create
     model = comment_or_post
-    new_vote = model.votes.create(user_id: user.id)
+    new_vote = model.votes.create(user_id: current_user.id)
     if new_vote.valid?
-      render json: new_vote.to_json
+      render json: new_vote
     else
-      render json: new_vote.errors.to_json
+      render json: new_vote.errors
     end
   end
 
   def destroy
     vote = current_user.votes.find(params[:id])
     vote.destroy!
-    render json: vote.to_json
+    render json: vote
   end
 
   def votes_per_post
-    render json: post.votes.to_json
+    render json: post.votes
   end
 
   def votes_per_comment
-    render json: comment.votes.to_json
+    render json: comment.votes
   end
 
   private
@@ -35,9 +37,5 @@ class VotesController < ApplicationController
 
   def post
     @_post ||= Post.find(params[:post_id])
-  end
-
-  def user
-    @_user ||= User.find(params[:user_id])
   end
 end

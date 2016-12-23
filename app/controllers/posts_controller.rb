@@ -1,4 +1,6 @@
 class PostsController < ApplicationController
+  before_filter :authenticate_request!, only: [:create, :destroy]
+
   def create
     new_post = current_user.posts.new(text: params[:text], sport: params[:sport])
 
@@ -12,40 +14,30 @@ class PostsController < ApplicationController
       new_post.first_or_create_tags(params[:tags])
     end
 
-    render json: format_post(new_post).to_json
+    render json: new_post.serialize
   end
 
   def destroy
     post = current_user.posts.find(params[:id])
     post.destroy!
-    render json: post.to_json
+    render json: post
   end
 
   def index
     posts = Post.get_latest_posts(size: params[:size], page: params[:page])
-    formatted_posts = posts.map {|post| format_post(post)}
-    render json: formatted_posts.to_json
+    formatted_posts = posts.map { |post| post.serialize }
+    render json: formatted_posts
   end
 
   def show
     post = Post.find(params[:id])
-    render json: format_post(post).to_json
+    render json: post.serialize
   end
 
   def user_posts
     user = User.find(params[:user_id])
     user_posts = user.posts.get_latest_posts(size: params[:size], page: params[:page])
-    formatted_posts = user_posts.map {|post| format_post(post)}
-    render json: formatted_posts.to_json
-  end
-
-  private
-
-  def format_post(current_post)
-    {
-      post: current_post,
-      image: current_post.images.first,
-      tags: current_post.tags
-    }
+    formatted_posts = user_posts.map { |post| post.serialize }
+    render json: formatted_posts
   end
 end

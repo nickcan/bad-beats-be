@@ -1,11 +1,11 @@
 class TagsController < ApplicationController
   def index
     tags = Tag.search(params[:name])
-    render json: tags.to_json
+    render json: tags
   end
 
   def posts_by_tag
     tag = Tag.find_by name: params[:name]
-    render json: tag.posts.to_json
+    render json: tag.posts
   end
 end
