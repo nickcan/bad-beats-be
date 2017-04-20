@@ -2,7 +2,7 @@ class PostsController < ApplicationController
   before_filter :authenticate_request!, only: [:create, :destroy]
 
   def create
-    new_post = current_user.posts.new(text: params[:text], sport: params[:sport])
+    new_post = current_user.posts.new(text: params[:text], sport: params[:sport].downcase)
 
     if params[:image]
       new_post.create_image_and_upload_to_s3(params[:image][:file])

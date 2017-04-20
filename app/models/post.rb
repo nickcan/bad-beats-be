@@ -12,11 +12,11 @@ class Post < ActiveRecord::Base
 
   class << self
     def get_latest_posts(size: 15, page: nil)
-      order(:created_at).reverse_order.limit(size).offset(page)
+      order(:created_at).reverse_order.limit(size).offset(size.to_i * page.to_i)
     end
 
     def get_latest_posts_by_sport(size: 15, page: nil, sport: nil)
-      where(sport: sport).order(:created_at).reverse_order.limit(size).offset(page)
+      where(sport: sport).order(:created_at).reverse_order.limit(size).offset(size.to_i * page.to_i)
     end
   end
 
@@ -34,9 +34,15 @@ class Post < ActiveRecord::Base
 
   def serialize
     {
-      post: self,
-      image: self.images.first,
-      tags: self.tags
+      id: id,
+      user_id: user_id,
+      text: text,
+      sport: sport,
+      created_at: created_at,
+      updated_at: updated_at,
+      images: images,
+      tags: tags,
+      user: user.serialize
     }
   end
 end
