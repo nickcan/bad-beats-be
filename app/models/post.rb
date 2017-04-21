@@ -11,14 +11,14 @@ class Post < ActiveRecord::Base
   validates :sport, presence: true
 
   class << self
-    def get_latest_posts(size: nil, page: nil)
+    def get_latest_posts(page: nil, size: nil)
       size ||= 2
-      order(:created_at).reverse_order.offset(size.to_i * page.to_i).limit(size)
+      order(:created_at).reverse_order.offset(size.to_i * page.to_i).limit(size.to_i)
     end
 
-    def get_latest_posts_by_sport(size: nil, page: nil, sport: nil)
+    def get_latest_posts_by_sport(page: nil, size: nil, sport: nil)
       size ||= 2
-      where(sport: sport).order(:created_at).reverse_order.limit(size).offset(size.to_i * page.to_i)
+      where(sport: sport.downcase).order(:created_at).reverse_order.limit(size.to_i).offset(size.to_i * page.to_i)
     end
   end
 

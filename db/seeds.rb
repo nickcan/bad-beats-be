@@ -1,6 +1,6 @@
 
 class SeedHelper
-  SPORTS = ["Football", "Basketball", "Baseball", "Soccer", "Golf"]
+  SPORTS = ["football", "basketball", "baseball", "golf"]
 
   attr_reader :user_count
 
@@ -8,20 +8,24 @@ class SeedHelper
     @user_count = user_count
   end
 
-  def seed
+  def create_users()
     user_count.times do
-      user = User.create(
+      User.create(
         email: Faker::Internet.email,
         name: Faker::StarWars.character,
         password: Faker::Internet.password
       )
-
-      create_multiple_posts_per_user user
     end
   end
 
-  def create_multiple_posts_per_user(user)
-    rand(10).times do
+  def seed
+    create_users
+    create_multiple_posts
+  end
+
+  def create_multiple_posts
+    rand(100).times do
+      user = User.all.sample
       post = user.posts.create(
         sport: SPORTS.sample,
         text: Faker::StarWars.quote

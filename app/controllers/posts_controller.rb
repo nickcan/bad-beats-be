@@ -24,7 +24,12 @@ class PostsController < ApplicationController
   end
 
   def index
-    posts = Post.get_latest_posts(size: params[:size], page: params[:page])
+    if params[:sport].present?
+      posts = Post.get_latest_posts_by_sport(size: params[:size], page: params[:page], sport: params[:sport])
+    else
+      posts = Post.get_latest_posts(size: params[:size], page: params[:page])
+    end
+
     formatted_posts = posts.map { |post| post.serialize }
     render json: formatted_posts
   end
