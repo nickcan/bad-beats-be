@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20161214090921) do
   create_table "comments", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
     t.uuid     "post_id",    null: false
     t.uuid     "user_id",    null: false
-    t.string   "message",    null: false
+    t.text     "message",    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20161214090921) do
 
   create_table "posts", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
     t.uuid     "user_id",    null: false
-    t.string   "text"
+    t.text     "text"
     t.string   "sport",      null: false
     t.datetime "created_at"
     t.datetime "updated_at"

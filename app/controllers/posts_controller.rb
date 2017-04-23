@@ -14,7 +14,7 @@ class PostsController < ApplicationController
       new_post.first_or_create_tags(params[:tags])
     end
 
-    render json: new_post.serialize
+    render json: new_post.serialize(current_user.id)
   end
 
   def destroy

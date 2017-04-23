@@ -19,8 +19,16 @@ class SeedHelper
   end
 
   def seed
+    start = Time.now
+    puts "Seeding database..."
     create_users
     create_multiple_posts
+    puts "Finished in #{Time.now - start}"
+    puts "Created:"
+    puts "#{User.count} users"
+    puts "#{Post.count} posts"
+    puts "#{Comment.count} comments"
+    puts "#{Vote.count} votes"
   end
 
   def create_multiple_posts

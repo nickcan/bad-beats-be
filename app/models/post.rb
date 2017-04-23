@@ -7,7 +7,7 @@ class Post < ActiveRecord::Base
   has_many :tags, through: :taggings
 
   validates :user_id, presence: true
-  validates :text, length: { maximum: 500 }, allow_blank: true
+  validates :text, length: { maximum: 800 }, allow_blank: true
   validates :sport, presence: true
 
   class << self

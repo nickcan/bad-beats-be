@@ -3,7 +3,8 @@ class Comment < ActiveRecord::Base
   belongs_to :user
   has_many :votes, as: :votable, dependent: :destroy
 
-  validates_presence_of :message, :post_id, :user_id
+  validates_presence_of :post_id, :user_id
+  validates :message, length: { maximum: 500 }, presence: true
 
   class << self
     def get_latest_comments(size: 15, page: nil)
