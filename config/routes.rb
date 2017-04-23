@@ -20,7 +20,8 @@ Rails.application.routes.draw do
   get 'tags/:name/posts', to: 'tags#posts_by_tag'
 
   resources :images, only: [:create, :show]
-  resources :votes, only: [:create, :destroy]
+  resources :votes, only: [:create]
+  delete 'votes', to: 'votes#destroy'
 
   get '/auth/:provider/callback', to: 'sessions#login_facebook'
 end

@@ -34,7 +34,7 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def serialize
+  def serialize(current_user_id)
     {
       id: id,
       user_id: user_id,
@@ -42,6 +42,9 @@ class Post < ActiveRecord::Base
       sport: sport,
       created_at: created_at,
       updated_at: updated_at,
+      current_user_has_voted: votes.find_by(user_id: current_user_id).present?,
+      vote_count: votes.count,
+      comments: comments.order(:created_at).limit(5).map { |comment| comment.serialize(current_user_id) },
       images: images,
       tags: tags,
       user: user.serialize

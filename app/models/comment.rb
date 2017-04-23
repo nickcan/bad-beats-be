@@ -10,4 +10,17 @@ class Comment < ActiveRecord::Base
       order(:created_at).limit(size).offset(page)
     end
   end
+
+  def serialize(current_user_id)
+    {
+      id: id,
+      post_id: post_id,
+      created_at: created_at,
+      updated_at: updated_at,
+      message: message,
+      current_user_has_voted: votes.find_by(user_id: current_user_id).present?,
+      vote_count: votes.count,
+      user: user.serialize
+    }
+  end
 end

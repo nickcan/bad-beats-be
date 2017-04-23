@@ -30,7 +30,9 @@ class PostsController < ApplicationController
       posts = Post.get_latest_posts(size: params[:size], page: params[:page])
     end
 
-    formatted_posts = posts.map { |post| post.serialize }
+    current_user_id = user_id_in_token? ? auth_token[:user_id] : nil
+
+    formatted_posts = posts.map { |post| post.serialize(current_user_id) }
     render json: formatted_posts
   end
 

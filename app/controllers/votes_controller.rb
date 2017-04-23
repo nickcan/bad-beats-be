@@ -2,17 +2,16 @@ class VotesController < ApplicationController
   before_filter :authenticate_request!, only: [:create, :destroy]
 
   def create
-    model = comment_or_post
-    new_vote = model.votes.create(user_id: current_user.id)
+    new_vote = comment_or_post.votes.create(user_id: current_user.id)
     if new_vote.valid?
       render json: new_vote
     else
-      render json: new_vote.errors
+      render json: new_vote.errors, status: :bad_request
     end
   end
 
   def destroy
-    vote = current_user.votes.find(params[:id])
+    vote = comment_or_post.votes.find_by(user_id: current_user.id)
     vote.destroy!
     render json: vote
   end

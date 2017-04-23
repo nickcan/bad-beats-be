@@ -13,6 +13,14 @@ class ApplicationController < ActionController::API
     render json: { errors: ['Not Authenticated'] }, status: :unauthorized
   end
 
+  def auth_token
+    @_auth_token ||= JsonWebToken.decode(http_token)
+  end
+
+  def user_id_in_token?
+    http_token && auth_token && auth_token[:user_id].to_i
+  end
+
   private
 
   def http_token
@@ -21,11 +29,4 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def auth_token
-    @_auth_token ||= JsonWebToken.decode(http_token)
-  end
-
-  def user_id_in_token?
-    http_token && auth_token && auth_token[:user_id].to_i
-  end
 end
