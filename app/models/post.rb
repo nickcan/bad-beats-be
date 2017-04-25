@@ -34,7 +34,7 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def serialize(current_user_id)
+  def serialize(current_user_id = nil)
     {
       id: id,
       user_id: user_id,
@@ -44,7 +44,7 @@ class Post < ActiveRecord::Base
       updated_at: updated_at,
       current_user_has_voted: votes.find_by(user_id: current_user_id).present?,
       vote_count: votes.count,
-      comments: comments.order(:created_at).limit(5).map { |comment| comment.serialize(current_user_id) },
+      comments: comments.order(:created_at).first(5).map { |comment| comment.serialize(current_user_id) },
       images: images,
       tags: tags,
       user: user.serialize

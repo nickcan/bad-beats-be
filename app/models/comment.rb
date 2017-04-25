@@ -12,7 +12,7 @@ class Comment < ActiveRecord::Base
     end
   end
 
-  def serialize(current_user_id)
+  def serialize(current_user_id = nil)
     {
       id: id,
       post_id: post_id,
