@@ -4,7 +4,7 @@ class CommentsController < ApplicationController
   def create
     comment = current_user.comments.create(message: params[:message], post_id: post.id)
     if comment.valid?
-      render json: comment.serialize(current_user).to_json
+      render json: comment.serialize.to_json
     else
       render json: comment.errors, status: :unprocessable_entity
     end
@@ -25,7 +25,7 @@ class CommentsController < ApplicationController
     comment = current_user.comments.find(params[:id])
     comment.update_attributes(comment_params)
     if comment.valid?
-      render json: comment.serialize(current_user).to_json
+      render json: comment.serialize(current_user.id).to_json
     else
       render json: comment.errors, status: :unprocessable_entity
     end

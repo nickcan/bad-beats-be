@@ -19,8 +19,8 @@ class Comment < ActiveRecord::Base
       created_at: created_at,
       updated_at: updated_at,
       message: message,
-      current_user_has_voted: votes.find_by(user_id: current_user_id).present?,
-      vote_count: votes.count,
+      current_user_has_voted: votes.any? { |post| current_user_id == post.user_id },
+      vote_count: vote_count,
       user: user.serialize
     }
   end

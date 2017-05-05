@@ -13,12 +13,23 @@ class Post < ActiveRecord::Base
   class << self
     def get_latest_posts(page: nil, size: nil)
       size ||= 2
-      order(:created_at).reverse_order.offset(size.to_i * page.to_i).limit(size.to_i)
+
+      includes(:user, :images, :tags, :votes, comments: [:user, :votes])
+      .order(:created_at)
+      .reverse_order
+      .offset(size.to_i * page.to_i)
+      .limit(size.to_i)
     end
 
     def get_latest_posts_by_sport(page: nil, size: nil, sport: nil)
       size ||= 2
-      where(sport: sport.downcase).order(:created_at).reverse_order.limit(size.to_i).offset(size.to_i * page.to_i)
+
+      includes(:user, :images, :tags, :votes, comments: [:user, :votes])
+      .where(sport: sport.downcase)
+      .order(:created_at)
+      .reverse_order
+      .offset(size.to_i * page.to_i)
+      .limit(size.to_i)
     end
   end
 
@@ -42,9 +53,9 @@ class Post < ActiveRecord::Base
       sport: sport,
       created_at: created_at,
       updated_at: updated_at,
-      current_user_has_voted: votes.find_by(user_id: current_user_id).present?,
-      vote_count: votes.count,
-      comments: comments.order(:created_at).first(5).map { |comment| comment.serialize(current_user_id) },
+      current_user_has_voted: votes.any? { |post| current_user_id == post.user_id },
+      vote_count: vote_count,
+      comments: comments.first(5).map { |comment| comment.serialize(current_user_id) },
       images: images,
       tags: tags,
       user: user.serialize

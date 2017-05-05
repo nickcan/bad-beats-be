@@ -18,9 +18,10 @@ ActiveRecord::Schema.define(version: 20161214090921) do
   enable_extension "uuid-ossp"
 
   create_table "comments", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
-    t.uuid     "post_id",    null: false
-    t.uuid     "user_id",    null: false
-    t.text     "message",    null: false
+    t.uuid     "post_id",                null: false
+    t.uuid     "user_id",                null: false
+    t.text     "message",                null: false
+    t.integer  "vote_count", default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -38,9 +39,10 @@ ActiveRecord::Schema.define(version: 20161214090921) do
   end
 
   create_table "posts", id: :uuid, default: "uuid_generate_v4()", force: true do |t|
-    t.uuid     "user_id",    null: false
+    t.uuid     "user_id",                null: false
     t.text     "text"
-    t.string   "sport",      null: false
+    t.string   "sport",                  null: false
+    t.integer  "vote_count", default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

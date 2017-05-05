@@ -4,6 +4,7 @@ class CreatePosts < ActiveRecord::Migration
       t.uuid   :user_id, null: false
       t.text   :text
       t.string :sport, index: true, null: false
+      t.integer :vote_count, null: false, default: 0
 
       t.timestamps
     end
