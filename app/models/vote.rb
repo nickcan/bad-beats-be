@@ -9,6 +9,16 @@ class Vote < ActiveRecord::Base
   after_create :increment_vote_count
   after_destroy :decrement_vote_count
 
+  class << self
+    def get_latest_votes(page: nil, size: nil)
+      size ||= 100
+
+      includes(:user)
+      .offset(size.to_i * page.to_i)
+      .limit(size.to_i)
+    end
+  end
+
   def increment_vote_count
     votable.update_attributes(vote_count: votable.vote_count + 1)
   end

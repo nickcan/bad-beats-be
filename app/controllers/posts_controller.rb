@@ -14,7 +14,7 @@ class PostsController < ApplicationController
       new_post.first_or_create_tags(params[:tags])
     end
 
-    render json: new_post.serialize(current_user.id)
+    render json: new_post
   end
 
   def destroy
@@ -25,26 +25,23 @@ class PostsController < ApplicationController
 
   def index
     if params[:sport].present?
-      posts = Post.get_latest_posts_by_sport(size: params[:size], page: params[:page], sport: params[:sport])
+      @posts = Post.get_latest_posts_by_sport(size: params[:size], page: params[:page], sport: params[:sport])
     else
-      posts = Post.get_latest_posts(size: params[:size], page: params[:page])
+      @posts = Post.get_latest_posts(size: params[:size], page: params[:page])
     end
 
-    current_user_id = user_id_in_token? ? auth_token[:user_id] : nil
-
-    formatted_posts = posts.map { |post| post.serialize(current_user_id) }
-    render json: formatted_posts
+    render json: @posts, current_user_id: current_user_id
   end
 
   def show
     post = Post.find(params[:id])
-    render json: post.serialize
+    render json: post
   end
 
   def user_posts
     user = User.find(params[:user_id])
     user_posts = user.posts.get_latest_posts(size: params[:size], page: params[:page])
-    formatted_posts = user_posts.map { |post| post.serialize }
-    render json: formatted_posts
+
+    render json: user_posts
   end
 end

@@ -21,19 +21,10 @@ class User < ActiveRecord::Base
     end
   end
 
-  def serialize
-    {
-      email: self.email,
-      id: self.id,
-      image_url: self.image_url,
-      name: self.name
-    }
-  end
-
   def format_with_jwt_payload
     {
       auth_token: JsonWebToken.encode({user_id: self.id}),
-      user: serialize
+      user: UserSerializer.new(self).attributes
     }
   end
 end

@@ -7,21 +7,17 @@ class Comment < ActiveRecord::Base
   validates :message, length: { maximum: 500 }, presence: true
 
   class << self
-    def get_latest_comments(size: 15, page: nil)
-      order(:created_at).limit(size).offset(page)
+    def get_latest_comments(page: nil, size: nil)
+      size ||= 15
+
+      includes(:user, :votes)
+      .order(:created_at)
+      .offset(size.to_i * page.to_i)
+      .limit(size.to_i)
     end
   end
 
   def serialize(current_user_id = nil)
-    {
-      id: id,
-      post_id: post_id,
-      created_at: created_at,
-      updated_at: updated_at,
-      message: message,
-      current_user_has_voted: votes.any? { |post| current_user_id == post.user_id },
-      vote_count: vote_count,
-      user: user.serialize
-    }
+    CommentSerializer.new(self, current_user_id: current_user_id).attributes
   end
 end

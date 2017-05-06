@@ -21,6 +21,10 @@ class ApplicationController < ActionController::API
     http_token && auth_token && auth_token[:user_id].to_i
   end
 
+  def current_user_id
+    user_id_in_token? ? auth_token[:user_id] : nil
+  end
+
   private
 
   def http_token

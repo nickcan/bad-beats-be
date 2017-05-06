@@ -12,7 +12,7 @@ class Post < ActiveRecord::Base
 
   class << self
     def get_latest_posts(page: nil, size: nil)
-      size ||= 2
+      size ||= 25
 
       includes(:user, :images, :tags, :votes, comments: [:user, :votes])
       .order(:created_at)
@@ -22,7 +22,7 @@ class Post < ActiveRecord::Base
     end
 
     def get_latest_posts_by_sport(page: nil, size: nil, sport: nil)
-      size ||= 2
+      size ||= 25
 
       includes(:user, :images, :tags, :votes, comments: [:user, :votes])
       .where(sport: sport.downcase)
@@ -46,19 +46,6 @@ class Post < ActiveRecord::Base
   end
 
   def serialize(current_user_id = nil)
-    {
-      id: id,
-      user_id: user_id,
-      text: text,
-      sport: sport,
-      created_at: created_at,
-      updated_at: updated_at,
-      current_user_has_voted: votes.any? { |post| current_user_id == post.user_id },
-      vote_count: vote_count,
-      comments: comments.first(5).map { |comment| comment.serialize(current_user_id) },
-      images: images,
-      tags: tags,
-      user: user.serialize
-    }
+    PostSerializer.new(self, current_user_id: current_user_id).attributes
   end
 end

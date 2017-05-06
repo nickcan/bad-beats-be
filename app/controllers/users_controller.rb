@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    formatted_users = User.all.map { |user| user.serialize }
+    formatted_users = User.limit(100)
     render json: formatted_users
   end
 
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
   end
 
   def active_user
-    render json: current_user.serialize
+    render json: current_user
   end
 
   private

@@ -4,7 +4,7 @@ class VotesController < ApplicationController
   def create
     new_vote = comment_or_post.votes.create(user_id: current_user.id)
     if new_vote.valid?
-      render json: comment_or_post.serialize(current_user.id).to_json
+      render json: comment_or_post.serialize(current_user.id)
     else
       render json: new_vote.errors, status: :bad_request
     end
@@ -13,7 +13,7 @@ class VotesController < ApplicationController
   def destroy
     vote = comment_or_post.votes.find_by(user_id: current_user.id)
     vote.destroy!
-    render json: comment_or_post.serialize(current_user.id).to_json
+    render json: comment_or_post.serialize(current_user.id)
   end
 
   def votes_per_post
