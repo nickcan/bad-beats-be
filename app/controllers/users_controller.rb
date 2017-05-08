@@ -29,7 +29,8 @@ class UsersController < ApplicationController
   end
 
   def show
-    render json: found_user
+    is_active_user_following = current_user.is_following?(found_user.id)
+    render json: found_user.format_with_following_status(is_active_user_following)
   end
 
   def active_user
