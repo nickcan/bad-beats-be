@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
   has_secure_password
 
   has_many :comments, dependent: :destroy
+  has_many :followers, class_name: 'Followings', foreign_key: 'user_id'
+  has_many :following, class_name: 'Followings', foreign_key: 'follower_id'
   has_many :posts, dependent: :destroy
   has_many :votes, dependent: :destroy
 
@@ -26,5 +28,25 @@ class User < ActiveRecord::Base
       auth_token: JsonWebToken.encode({user_id: self.id}),
       user: UserSerializer.new(self).attributes
     }
+  end
+
+  def is_following?(user_id)
+    following.find_by(user_id: user_id).present?
+  end
+
+  def search_followers(page: nil, size: nil)
+    size ||= 50
+
+    followers.includes(:user)
+    .offset(size.to_i * page.to_i)
+    .limit(size.to_i)
+  end
+
+  def search_following(page: nil, size: nil)
+    size ||= 50
+
+    following.includes(:follower)
+    .offset(size.to_i * page.to_i)
+    .limit(size.to_i)
   end
 end

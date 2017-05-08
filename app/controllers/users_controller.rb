@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_request!, only: [:active_user, :destroy, :update]
+  before_filter :authenticate_request!, except: [:create, :index]
 
   def create
     new_user = User.create(user_creation_params)
@@ -12,7 +12,6 @@ class UsersController < ApplicationController
 
   def destroy
     current_user.destroy!
-    session[:user_id] = nil
     render json: current_user
   end
 
@@ -30,17 +29,39 @@ class UsersController < ApplicationController
   end
 
   def show
-    render json: found_user.serialize
+    render json: found_user
   end
 
   def active_user
     render json: current_user
   end
 
+  def followers
+    user_followers = found_user.search_followers(page: params[:page], size: params[:size])
+
+    formatted_followers = user_followers.map do |follow_association|
+      is_active_user_following = current_user.is_following?(follow_association.follower_id)
+      follow_association.format_follower(is_active_user_following)
+    end
+
+    render json: formatted_followers.to_json
+  end
+
+  def following
+    user_following = found_user.search_following(page: params[:page], size: params[:size])
+
+    formatted_following = user_following.map do |follow_association|
+      is_active_user_following = current_user.is_following?(follow_association.user_id)
+      follow_association.format_following(is_active_user_following)
+    end
+
+    render json: formatted_following.to_json
+  end
+
   private
 
   def found_user
-    @_user ||= User.find(params[:id])
+    @_user ||= User.find(params[:id] || params[:user_id])
   end
 
   def user_creation_params

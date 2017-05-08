@@ -2,5 +2,7 @@ class UserSerializer < ActiveModel::Serializer
   attributes :id,
              :email,
              :image_url,
-             :name
+             :name,
+             :follower_count,
+             :following_count
 end

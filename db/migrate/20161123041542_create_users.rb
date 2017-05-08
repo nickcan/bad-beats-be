@@ -4,6 +4,8 @@ class CreateUsers < ActiveRecord::Migration
       t.string :provider
       t.string :uid
       t.string :email, null: false, unique: true
+      t.integer :follower_count, null: false, default: 0
+      t.integer :following_count, null: false, default: 0
       t.string :name
       t.string :image_url
       t.string :password_digest, null: false

@@ -1,10 +1,9 @@
-
 class SeedHelper
-  SPORTS = ["football", "basketball", "baseball", "golf"]
+  SPORTS = ["football", "basketball", "baseball"]
 
   attr_reader :user_count
 
-  def initialize(user_count: 10)
+  def initialize(user_count: 30)
     @user_count = user_count
   end
 
@@ -22,7 +21,7 @@ class SeedHelper
     start = Time.now
     puts "Seeding database..."
     create_users
-    create_multiple_posts
+    create_posts_comments_votes_followings
     puts "Finished in #{Time.now - start}"
     puts "Created:"
     puts "#{User.count} users"
@@ -31,17 +30,25 @@ class SeedHelper
     puts "#{Vote.count} votes"
   end
 
-  def create_multiple_posts
-    rand(100).times do
-      user = User.all.sample
-      post = user.posts.create(
-        sport: SPORTS.sample,
-        text: Faker::StarWars.quote
-      )
+  def associate_followings(user)
+    rand(10).times do
+      user.followers.create follower_id: random_user_id
+    end
+  end
 
-      post.first_or_create_tags Faker::Hipster.words(rand(3))
-      create_votes post
-      create_multiple_comments_per_post post
+  def create_posts_comments_votes_followings
+    user = User.all.each do |user|
+      rand(10).times do
+        post = user.posts.create(
+          sport: SPORTS.sample,
+          text: Faker::StarWars.quote
+        )
+
+        associate_followings user
+        post.first_or_create_tags Faker::Hipster.words(rand(3))
+        create_votes post
+        create_multiple_comments_per_post post
+      end
     end
   end
 
@@ -57,7 +64,7 @@ class SeedHelper
   end
 
   def create_votes(model_instance)
-    rand(50).times do
+    rand(25).times do
       model_instance.votes.create(
         user_id: random_user_id
       )
