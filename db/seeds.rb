@@ -12,6 +12,7 @@ class SeedHelper
       User.create(
         email: Faker::Internet.email,
         name: Faker::StarWars.character,
+        short_bio: Faker::StarWars.quote,
         password: Faker::Internet.password
       )
     end

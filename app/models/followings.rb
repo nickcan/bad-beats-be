@@ -19,11 +19,11 @@ class Followings < ActiveRecord::Base
     follower.update_attributes(following_count: follower.following_count - 1)
   end
 
-  def format_follower(active_user_is_following = false)
-    FollowerSerializer.new(self, active_user_is_following: active_user_is_following)
+  def format_follower(is_active_user_following = false)
+    UserSerializer.new(follower, is_active_user_following: is_active_user_following)
   end
 
-  def format_following(active_user_is_following = false)
-    FollowingSerializer.new(self, active_user_is_following: active_user_is_following)
+  def format_following(is_active_user_following = false)
+    UserSerializer.new(user, is_active_user_following: is_active_user_following)
   end
 end

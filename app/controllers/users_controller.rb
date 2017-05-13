@@ -16,7 +16,10 @@ class UsersController < ApplicationController
   end
 
   def index
-    formatted_users = User.limit(100)
+    formatted_users = User.limit(100).map do |user|
+      UserSerializer.new(user, is_active_user_following: current_user && current_user.is_following?(user.id)).attributes
+    end
+
     render json: formatted_users
   end
 
@@ -29,8 +32,7 @@ class UsersController < ApplicationController
   end
 
   def show
-    is_active_user_following = current_user.is_following?(found_user.id)
-    render json: found_user.format_with_following_status(is_active_user_following)
+    render json: found_user, current_user: current_user
   end
 
   def active_user

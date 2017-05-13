@@ -23,13 +23,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def format_with_following_status(active_user_is_following)
-    {
-      user: UserSerializer.new(self).attributes,
-      active_user_is_following: active_user_is_following
-    }
-  end
-
   def format_with_jwt_payload
     {
       auth_token: JsonWebToken.encode({user_id: self.id}),

@@ -7,6 +7,7 @@ class CreateUsers < ActiveRecord::Migration
       t.integer :follower_count, null: false, default: 0
       t.integer :following_count, null: false, default: 0
       t.string :name
+      t.text   :short_bio
       t.string :image_url
       t.string :password_digest, null: false
 
