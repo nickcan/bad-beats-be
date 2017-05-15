@@ -6,6 +6,7 @@ class UserSerializer < ActiveModel::Serializer
              :short_bio,
              :follower_count,
              :following_count,
+             :post_count,
              :is_active_user_following
 
   def is_active_user_following

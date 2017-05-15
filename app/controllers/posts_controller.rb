@@ -42,6 +42,6 @@ class PostsController < ApplicationController
     user = User.find(params[:user_id])
     user_posts = user.posts.get_latest_posts(size: params[:size], page: params[:page])
 
-    render json: user_posts
+    render json: user_posts, current_user_id: current_user_id
   end
 end

@@ -74,6 +74,7 @@ ActiveRecord::Schema.define(version: 20170507211727) do
     t.string   "email",                       null: false
     t.integer  "follower_count",  default: 0, null: false
     t.integer  "following_count", default: 0, null: false
+    t.integer  "post_count",      default: 0, null: false
     t.string   "name"
     t.text     "short_bio"
     t.string   "image_url"

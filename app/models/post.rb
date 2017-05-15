@@ -10,6 +10,9 @@ class Post < ActiveRecord::Base
   validates :text, length: { maximum: 800 }, allow_blank: true
   validates :sport, presence: true
 
+  after_create :increment_post_count
+  after_destroy :decrement_post_count
+
   class << self
     def get_latest_posts(page: nil, size: nil)
       size ||= 25
@@ -43,6 +46,14 @@ class Post < ActiveRecord::Base
       tag = Tag.where(name: tagName).first_or_create name: tagName
       Tagging.create post_id: self.id, tag_id: tag.id
     end
+  end
+
+  def increment_post_count
+    user.update_attributes(post_count: user.post_count + 1)
+  end
+
+  def decrement_post_count
+    user.update_attributes(post_count: user.post_count - 1)
   end
 
   def serialize(current_user_id = nil)
