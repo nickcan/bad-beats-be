@@ -10,8 +10,8 @@ class Post < ActiveRecord::Base
   validates :text, length: { maximum: 800 }, allow_blank: true
   validates :sport, presence: true
 
-  after_create :increment_post_count
-  after_destroy :decrement_post_count
+  after_save :set_post_count
+  after_destroy :set_post_count
 
   class << self
     def get_latest_posts(page: nil, size: nil)
@@ -48,12 +48,8 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def increment_post_count
-    user.update_attributes(post_count: user.post_count + 1)
-  end
-
-  def decrement_post_count
-    user.update_attributes(post_count: user.post_count - 1)
+  def set_post_count
+    user.update_attributes(post_count: user.posts.count)
   end
 
   def serialize(current_user_id = nil)

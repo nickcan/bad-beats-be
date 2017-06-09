@@ -3,11 +3,11 @@ class SeedHelper
 
   attr_reader :user_count
 
-  def initialize(user_count: 30)
+  def initialize(user_count: 20)
     @user_count = user_count
   end
 
-  def create_users()
+  def create_users
     user_count.times do
       User.create(
         email: Faker::Internet.email,
@@ -38,18 +38,18 @@ class SeedHelper
   end
 
   def create_posts_comments_votes_followings
-    user = User.all.each do |user|
-      rand(10).times do
-        post = user.posts.create(
-          sport: SPORTS.sample,
-          text: Faker::StarWars.quote
-        )
+    users = User.all
+    rand(20 * user_count).times do
+      user = users.sample
+      post = user.posts.create(
+        sport: SPORTS.sample,
+        text: Faker::StarWars.quote
+      )
 
-        associate_followings user
-        post.first_or_create_tags Faker::Hipster.words(rand(3))
-        create_votes post
-        create_multiple_comments_per_post post
-      end
+      associate_followings user
+      post.first_or_create_tags Faker::Hipster.words(rand(3))
+      create_votes post
+      create_multiple_comments_per_post post
     end
   end
 

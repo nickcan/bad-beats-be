@@ -6,8 +6,8 @@ class Vote < ActiveRecord::Base
 
   validates_uniqueness_of :votable_type, scope: [:user_id, :votable_id], message: "User has already voted"
 
-  after_create :increment_vote_count
-  after_destroy :decrement_vote_count
+  after_create :set_vote_count
+  after_destroy :set_vote_count
 
   class << self
     def get_latest_votes(page: nil, size: nil)
@@ -19,11 +19,7 @@ class Vote < ActiveRecord::Base
     end
   end
 
-  def increment_vote_count
-    votable.update_attributes(vote_count: votable.vote_count + 1)
-  end
-
-  def decrement_vote_count
-    votable.update_attributes(vote_count: votable.vote_count - 1)
+  def set_vote_count
+    votable.update_attributes(vote_count: votable.votes.count)
   end
 end
