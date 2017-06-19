@@ -10,8 +10,8 @@ class Post < ActiveRecord::Base
   validates :text, length: { maximum: 800 }, allow_blank: true
   validates :sport, presence: true
 
-  after_save :set_post_count
-  after_destroy :set_post_count
+  after_create :set_post_count_on_user
+  after_destroy :set_post_count_on_user
 
   class << self
     def get_latest_posts(page: nil, size: nil)
@@ -48,7 +48,7 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def set_post_count
+  def set_post_count_on_user
     user.update_attributes(post_count: user.posts.count)
   end
 

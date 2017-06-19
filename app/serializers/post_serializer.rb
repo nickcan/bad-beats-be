@@ -9,6 +9,7 @@ class PostSerializer < ActiveModel::Serializer
              :updated_at,
              :current_user_has_voted,
              :vote_count,
+             :comment_count,
              :comments,
              :images,
              :tags
@@ -26,6 +27,6 @@ class PostSerializer < ActiveModel::Serializer
   end
 
   def comments
-    object.comments.first(5).map { |comment| comment.serialize(current_user_id) }
+    object.comments.order(:created_at).first(5).map { |comment| comment.serialize(current_user_id) }
   end
 end

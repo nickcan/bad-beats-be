@@ -17,7 +17,7 @@ class CommentsController < ApplicationController
   end
 
   def index
-    comments = post.comments.get_latest_comments(size: params[:size], page: params[:page])
+    comments = post.comments.get_latest_comments(size: params[:size], offset: params[:offset])
     render json: comments, current_user_id: current_user_id
   end
 
