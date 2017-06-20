@@ -3,7 +3,7 @@ class SeedHelper
 
   attr_reader :user_count
 
-  def initialize(user_count: 20)
+  def initialize(user_count: 10)
     @user_count = user_count
   end
 
@@ -20,15 +20,23 @@ class SeedHelper
 
   def seed
     start = Time.now
+    user_start_count = User.count
+    post_start_count = Post.count
+    image_start_count = Image.count
+    comment_start_count = Comment.count
+    vote_start_count = Vote.count
     puts "Seeding database..."
+
     create_users
     create_posts_comments_votes_followings
+
     puts "Finished in #{Time.now - start}"
     puts "Created:"
-    puts "#{User.count} users"
-    puts "#{Post.count} posts"
-    puts "#{Comment.count} comments"
-    puts "#{Vote.count} votes"
+    puts "#{User.count - user_start_count} users"
+    puts "#{Post.count - post_start_count} posts"
+    puts "#{Image.count - image_start_count} images"
+    puts "#{Comment.count - comment_start_count} comments"
+    puts "#{Vote.count - vote_start_count} votes"
   end
 
   def associate_followings(user)
@@ -43,8 +51,14 @@ class SeedHelper
       user = users.sample
       post = user.posts.create(
         sport: SPORTS.sample,
-        text: Faker::StarWars.quote
+        text: [true, false].sample ? Faker::StarWars.quote : nil
       )
+
+      if ([true, false].sample)
+        post.create_image_and_upload_to_s3(Dir["./lib/assets/seed_assets/*"].sample)
+      else
+        post.update_attributes(text: Faker::StarWars.quote)
+      end
 
       associate_followings user
       post.first_or_create_tags Faker::Hipster.words(rand(3))
