@@ -6,7 +6,7 @@ class UsersController < ApplicationController
     if new_user.valid?
       render json: new_user.format_with_jwt_payload
     else
-      render json: new_user.errors
+      render json: {errors: new_user.errors}.to_json, status: :unprocessable_entity
     end
   end
 

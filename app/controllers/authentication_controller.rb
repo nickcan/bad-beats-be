@@ -4,7 +4,7 @@ class AuthenticationController < ApplicationController
     if user && user.authenticate(params[:password])
       render json: user.format_with_jwt_payload
     else
-      render json: {errors: ['Invalid Username/Password']}, status: :unauthorized
+      render json: {errors: {invalid: 'Invalid email or password'}}.to_json, status: :unauthorized
     end
   end
 end
