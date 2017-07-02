@@ -12,12 +12,19 @@ class User < ActiveRecord::Base
 
   class << self
     def from_omniauth(auth_hash)
-      user = find_or_create_by(uid: auth_hash['uid'], provider: auth_hash['provider'])
-      user.email = auth_hash['info']['email']
+      user = find_by_email(auth_hash['info']['email']) || find_or_create_by(uid: auth_hash['uid'], provider: auth_hash['provider'])
+
+      if user.uid && user.provider
+        user.email = auth_hash['info']['email']
+      end
+
+      if user.password_digest.blank?
+        user.password = user.password_confirmation = ""
+        user.password_digest = "facebook-authorized account"
+      end
+
       user.name = auth_hash['info']['name']
       user.image_url = auth_hash['info']['image']
-      user.password = user.password_confirmation = ""
-      user.password_digest = "facebook-authorized account"
       user.save!
       user
     end

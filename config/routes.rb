@@ -28,5 +28,5 @@ Rails.application.routes.draw do
   resources :votes, only: [:create]
   delete 'votes', to: 'votes#destroy'
 
-  get '/auth/:provider/callback', to: 'sessions#login_facebook'
+  get '/auth/:provider/callback', to: 'authentication#login_facebook'
 end
