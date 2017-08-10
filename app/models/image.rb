@@ -14,7 +14,7 @@ class Image < ActiveRecord::Base
   end
 
   def initialize_magick_image(file)
-    @magick_image ||= MiniMagick::Image.open(file)
+    @magick_image ||= MiniMagick::Image.read(file)
     self.width  = magick_image.width
     self.height = magick_image.height
     self.format = magick_image.type

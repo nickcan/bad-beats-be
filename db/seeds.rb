@@ -47,7 +47,7 @@ class SeedHelper
 
   def create_posts_comments_votes_followings
     users = User.all
-    rand(20 * user_count).times do
+    rand(12 * user_count).times do
       user = users.sample
       post = user.posts.create(
         sport: SPORTS.sample,
@@ -55,7 +55,7 @@ class SeedHelper
       )
 
       if ([true, false].sample)
-        post.create_image_and_upload_to_s3(Dir["./lib/assets/seed_assets/*"].sample)
+        post.create_image_and_upload_to_s3(File.open(Dir["./lib/assets/seed_assets/*"].sample))
       else
         post.update_attributes(text: Faker::StarWars.quote)
       end
@@ -79,7 +79,7 @@ class SeedHelper
   end
 
   def create_votes(model_instance)
-    rand(25).times do
+    rand(10).times do
       model_instance.votes.create(
         user_id: random_user_id
       )

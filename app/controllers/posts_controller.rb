@@ -5,7 +5,7 @@ class PostsController < ApplicationController
     new_post = current_user.posts.new(text: params[:text], sport: params[:sport].downcase)
 
     if params[:image]
-      new_post.create_image_and_upload_to_s3(params[:image][:file])
+      new_post.create_image_and_upload_to_s3(params[:image])
     end
 
     new_post.save!
