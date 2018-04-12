@@ -39,6 +39,14 @@ class Image < ActiveRecord::Base
     @_s3_object ||= s3_bucket.object(self.object_key)
   end
 
+  def set_current_status
+    if self.context == "profile"
+      self.imageable.images.where(context: self.context).update_all(status: nil)
+    end
+
+    self.status = "current"
+  end
+
   private
 
   def s3_resource
