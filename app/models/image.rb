@@ -50,10 +50,10 @@ class Image < ActiveRecord::Base
   private
 
   def s3_resource
-    @_s3_resource ||= Aws::S3::Resource.new(region: 'us-west-1')
+    @_s3_resource ||= Aws::S3::Resource.new(region: ENV["IMAGES_BUCKET_REGION"])
   end
 
   def s3_bucket
-    @_s3_bucket ||= s3_resource.bucket('bad-beats-images')
+    @_s3_bucket ||= s3_resource.bucket(ENV["IMAGES_BUCKET_NAME"])
   end
 end
