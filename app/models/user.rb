@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   has_many :following, class_name: 'Followings', foreign_key: 'follower_id'
   has_many :posts, dependent: :destroy
   has_many :votes, dependent: :destroy
+  has_many :images, as: :imageable, dependent: :destroy
 
   validates :email, uniqueness: true, presence: true
   validates :password, length: { minimum: 8 }, allow_nil: true
@@ -28,6 +29,21 @@ class User < ActiveRecord::Base
       user.save!
       user
     end
+  end
+
+  def create_image_and_upload_to_s3(file, context = nil)
+    image = self.images.new.initialize_magick_image(file)
+    image.context = context
+    image.set_current_status
+    image.upload_to_s3
+  end
+
+  def profile_picture
+    self.images.find_by(status: "current", context: "profile")
+  end
+
+  def profile_pictures
+    self.images.where(context: "profile")
   end
 
   def format_with_jwt_payload

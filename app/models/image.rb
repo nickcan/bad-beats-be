@@ -39,13 +39,21 @@ class Image < ActiveRecord::Base
     @_s3_object ||= s3_bucket.object(self.object_key)
   end
 
+  def set_current_status
+    if self.context == "profile"
+      self.imageable.images.where(context: self.context).update_all(status: nil)
+    end
+
+    self.status = "current"
+  end
+
   private
 
   def s3_resource
-    @_s3_resource ||= Aws::S3::Resource.new(region: 'us-west-1')
+    @_s3_resource ||= Aws::S3::Resource.new(region: ENV["IMAGES_BUCKET_REGION"])
   end
 
   def s3_bucket
-    @_s3_bucket ||= s3_resource.bucket('bad-beats-images')
+    @_s3_bucket ||= s3_resource.bucket(ENV["IMAGES_BUCKET_NAME"])
   end
 end

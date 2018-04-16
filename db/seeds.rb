@@ -7,17 +7,6 @@ class SeedHelper
     @user_count = user_count
   end
 
-  def create_users
-    user_count.times do
-      User.create(
-        email: Faker::Internet.email,
-        name: Faker::StarWars.character,
-        short_bio: Faker::StarWars.quote,
-        password: Faker::Internet.password
-      )
-    end
-  end
-
   def seed
     start = Time.now
     user_start_count = User.count
@@ -37,6 +26,19 @@ class SeedHelper
     puts "#{Image.count - image_start_count} images"
     puts "#{Comment.count - comment_start_count} comments"
     puts "#{Vote.count - vote_start_count} votes"
+  end
+
+  def create_users
+    user_count.times do
+      user = User.create(
+        email: Faker::Internet.email,
+        name: Faker::StarWars.character,
+        short_bio: Faker::StarWars.quote,
+        password: Faker::Internet.password
+      )
+
+      user.create_image_and_upload_to_s3(File.open(Dir["./lib/assets/seed_assets/*"].sample), "profile")
+    end
   end
 
   def associate_followings(user)
