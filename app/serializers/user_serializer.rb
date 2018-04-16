@@ -7,7 +7,8 @@ class UserSerializer < ActiveModel::Serializer
              :follower_count,
              :following_count,
              :post_count,
-             :is_active_user_following
+             :is_active_user_following,
+             :profile_picture
 
   def is_active_user_following
     if @instance_options[:is_active_user_following].present?
