@@ -37,7 +37,7 @@ class SeedHelper
         password: Faker::Internet.password
       )
 
-      user.create_image_and_upload_to_s3(File.open(Dir["./lib/assets/seed_assets/*"].sample), "profile")
+      user.create_image_and_upload_to_s3(File.open(Dir["./lib/assets/profile_seed_assets/*"].sample), "profile")
     end
   end
 

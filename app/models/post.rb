@@ -13,26 +13,31 @@ class Post < ActiveRecord::Base
   after_create :set_post_count_on_user
   after_destroy :set_post_count_on_user
 
+  scope :descend_order, -> { order(:created_at) }
+
+  scope :include_associated_info, -> {
+    includes(:user, :images, :tags, :votes, comments: [:user, :votes])
+  }
+
+  scope :of_followed_users, -> (follow_ids = nil) {
+    follow_ids ||= []
+    where(user_id: follow_ids) unless follow_ids.empty?
+  }
+
+  scope :by_sport, -> (sport = nil) {
+    where(sport: sport.downcase) unless sport.blank?
+  }
+
   class << self
-    def get_latest_posts(page: nil, size: nil)
+    def get_latest_posts(page: nil, size: nil, sport: nil)
       size ||= 25
 
-      includes(:user, :images, :tags, :votes, comments: [:user, :votes])
-      .order(:created_at)
-      .reverse_order
-      .offset(size.to_i * page.to_i)
-      .limit(size.to_i)
-    end
-
-    def get_latest_posts_by_sport(page: nil, size: nil, sport: nil)
-      size ||= 25
-
-      includes(:user, :images, :tags, :votes, comments: [:user, :votes])
-      .where(sport: sport.downcase)
-      .order(:created_at)
-      .reverse_order
-      .offset(size.to_i * page.to_i)
-      .limit(size.to_i)
+      include_associated_info
+        .by_sport(sport)
+        .descend_order
+        .reverse_order
+        .offset(size.to_i * page.to_i)
+        .limit(size.to_i)
     end
   end
 

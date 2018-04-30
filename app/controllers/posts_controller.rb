@@ -24,13 +24,14 @@ class PostsController < ApplicationController
   end
 
   def index
-    if params[:sport].present?
-      @posts = Post.get_latest_posts_by_sport(size: params[:size], page: params[:page], sport: params[:sport])
-    else
-      @posts = Post.get_latest_posts(size: params[:size], page: params[:page])
-    end
+    posts = Post.get_latest_posts(
+      size: params[:size],
+      page: params[:page],
+      sport: params[:sport]
+    )
+      .of_followed_users(current_user && current_user.following.pluck(:user_id))
 
-    render json: @posts, current_user_id: current_user_id
+    render json: posts, current_user_id: current_user_id
   end
 
   def show
